@@ -1,5 +1,12 @@
 import fs from "fs";
 import path from "path";
+// Side-effect import, deliberately: bip-kit loads shiki as an OPTIONAL peer
+// through a bundler-hidden dynamic import that Next's file tracer cannot see.
+// This static import (with shiki in serverExternalPackages) is what gets the
+// real package traced into the standalone build's node_modules — without it,
+// prod silently renders code blocks as the un-highlighted mono fallback while
+// dev shows them highlighted. Do not "clean up" this import.
+import "shiki";
 import { ArticleBody } from "bip-kit/react";
 import type { ThoughtBlock } from "@/lib/thoughts-content";
 import { MermaidDiagram } from "@/components/thoughts/MermaidDiagram";
