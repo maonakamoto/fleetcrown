@@ -1,0 +1,37 @@
+/**
+ * FleetCrown tokens → bip-kit's --bp-* theming contract, for /thoughts only
+ * (this file is imported by the essay route, not by globals.css).
+ *
+ * Every value is a var() reference into the design-token SSOT
+ * (src/app/globals.css), so both themes are covered by ONE mapping — the
+ * underlying tokens already flip with the theme. The three-selector list is
+ * deliberate: bip-kit/styles.css defines its neutral defaults on `:root`,
+ * `[data-theme="dark"]`, and (inside a prefers-color-scheme media query)
+ * `:root:not([data-theme="light"])` — that last one has 0,2,0 specificity,
+ * so a bare `:root` mapping would lose to it whenever the OS is dark. Tying
+ * each selector's specificity and loading after styles.css makes this
+ * mapping win everywhere.
+ */
+:root,
+:root:not([data-theme="light"]),
+:root[data-theme="dark"] {
+  --bp-font-sans: var(--font-sans);
+  --bp-font-mono: var(--font-mono);
+
+  --bp-bg: var(--surface-page);
+  --bp-surface: var(--surface-raised);
+  --bp-fg: var(--text-primary);
+  --bp-fg-muted: var(--text-secondary);
+  --bp-fg-faint: var(--text-tertiary);
+  --bp-border: var(--border-default);
+
+  /* FleetCrown links are monochrome (accent-text ≈ foreground); the warm
+     accent stays reserved for CTAs and the reading-progress hairline. */
+  --bp-accent: var(--accent-text);
+  --bp-accent-contrast: var(--accent-foreground);
+}
+
+/* The one place the warm brand accent belongs in an essay. */
+.bp-progress-bar {
+  background: var(--accent-warm);
+}

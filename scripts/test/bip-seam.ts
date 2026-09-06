@@ -23,15 +23,33 @@ function check(name: string, fn: () => void) {
   }
 }
 
+// The v0.2 block union rendered by bip-kit/react's ArticleBody (plus the two
+// block types ThoughtArticleBody special-cases: image/figure for alt-as-caption
+// and inline-SVG, footnote for hoisting). Parser and renderer ship in the SAME
+// package version so they cannot drift from each other — what this pin still
+// catches is a future bip-kit emitting a block type our WRAPPER mishandles,
+// and essays whose chart/stats fences would throw at parse time (they throw
+// here, in CI, instead of 500-ing the live route).
 const RENDERED_TYPES = new Set([
   "h2",
   "h3",
+  "h4",
+  "hr",
+  "p",
   "ul",
   "ol",
   "blockquote",
-  "p",
+  "pullquote",
+  "callout",
   "image",
+  "figure",
+  "gallery",
   "code",
+  "mermaid",
+  "chart",
+  "math",
+  "footnote",
+  "stats",
   "table",
   "embed",
 ]);
