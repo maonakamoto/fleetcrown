@@ -1,0 +1,106 @@
+import fs from "fs";
+import path from "path";
+import { ArticleBody } from "bip-kit/react";
+import type { ThoughtBlock } from "@/lib/thoughts-content";
+import { MermaidDiagram } from "@/components/thoughts/MermaidDiagram";
+
+/**
+ * Essay body renderer: bip-kit's reference renderer (`ArticleBody`) with two
+ * FleetCrown-specific behaviors layered on top of the raw block stream:
+ *
+ * 1. Alt-as-caption. Essays here caption images through the alt text (the
+ *    pre-bip-kit renderer displayed `alt` as the figcaption). bip-kit only
+ *    captions `figure` blocks (the `![alt](src "caption")` syntax), so plain
+ *    `image` blocks with a non-empty alt are promoted to `figure` blocks with
+ *    `caption = alt` — existing captions keep rendering without editing 60+
+ *    essays.
+ *
+ * 2. Inline local SVG diagrams. Repo-authored SVGs under /public/thoughts
+ *    reference design tokens (var(--*)) for fill/stroke so they flip with the
+ *    theme. An external <img> SVG cannot read page CSS vars and would freeze
+ *    to hardcoded hex, so those blocks are rendered as inlined SVG markup
+ *    (trusted committed content, never user input) instead of going through
+ *    bip-kit's <img>-based Figure. The block stream is split into segments
+ *    around them; everything else renders through ArticleBody.
+ */
+
+// Read a repo-authored SVG diagram from /public so it can be inlined into the
+// DOM. Only same-origin absolute paths are allowed, and any miss falls back
+// to the regular <img> path. Returns null on any failure.
+function readLocalSvg(src: string): string | null {
+  if (!src.startsWith("/") || src.includes("..")) return null;
+  try {
+    return fs.readFileSync(path.join(process.cwd(), "public", src), "utf-8");
+  } catch {
+    return null;
+  }
+}
+
+type SvgSegment = { kind: "svg"; svg: string; alt: string; caption?: string };
+type Segment = { kind: "article"; blocks: ThoughtBlock[] } | SvgSegment;
+
+function toSegments(blocks: ThoughtBlock[]): Segment[] {
+  const segments: Segment[] = [];
+  let current: ThoughtBlock[] = [];
+  const footnotes: ThoughtBlock[] = [];
+
+  const flush = () => {
+    if (current.length > 0) segments.push({ kind: "article", blocks: current });
+    current = [];
+  };
+
+  for (const block of blocks) {
+    if (block.type === "image" || block.type === "figure") {
+      const caption =
+        block.type === "figure" ? block.caption : block.alt.trim() ? block.alt : undefined;
+      const svg = block.src.endsWith(".svg") ? readLocalSvg(block.src) : null;
+      if (svg) {
+        flush();
+        segments.push({ kind: "svg", svg, alt: block.alt, caption });
+        continue;
+      }
+      // Alt-as-caption promotion for raster/remote images.
+      if (block.type === "image" && caption) {
+        current.push({ type: "figure", src: block.src, alt: block.alt, caption });
+        continue;
+      }
+    }
+    // Hoist footnote definitions to the last segment: ArticleBody collects
+    // them per call, and a mid-article footnotes section (possible once the
+    // stream is split around an SVG) would read as a bug.
+    if (block.type === "footnote") {
+      footnotes.push(block);
+      continue;
+    }
+    current.push(block);
+  }
+  current.push(...footnotes);
+  flush();
+  return segments;
+}
+
+export function ThoughtArticleBody({ blocks }: { blocks: ThoughtBlock[] }) {
+  return (
+    <>
+      {toSegments(blocks).map((segment, i) =>
+        segment.kind === "article" ? (
+          <ArticleBody key={i} blocks={segment.blocks} components={{ mermaid: MermaidDiagram }} />
+        ) : (
+          <div key={i} className="bp-article">
+            <figure className="bp-figure">
+              <div
+                role="img"
+                aria-label={segment.alt || undefined}
+                className="[&>svg]:h-auto [&>svg]:w-full"
+                dangerouslySetInnerHTML={{ __html: segment.svg }}
+              />
+              {segment.caption && (
+                <figcaption className="bp-figcaption">{segment.caption}</figcaption>
+              )}
+            </figure>
+          </div>
+        ),
+      )}
+    </>
+  );
+}

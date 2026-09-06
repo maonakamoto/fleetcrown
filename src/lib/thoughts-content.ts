@@ -23,6 +23,19 @@ export type ThoughtMeta = {
  */
 export type ThoughtBlock = ContentBlock;
 
+// bip-kit ≥0.2 frontmatter values can be YAML arrays (`tags: [a, b]`). All
+// current essays use scalar values; these two helpers accept both shapes so
+// an essay written either way lists correctly.
+function metaStr(value: string | string[] | undefined): string | undefined {
+  if (Array.isArray(value)) return value.join(", ");
+  return value;
+}
+
+function metaTags(value: string | string[] | undefined): string[] {
+  const parts = Array.isArray(value) ? value : (value ?? "").split(",");
+  return parts.map((s) => s.trim()).filter(Boolean);
+}
+
 export function listThoughts(): Array<ThoughtMeta & { body: string }> {
   if (!fs.existsSync(THOUGHTS_DIR)) return [];
   return fs
@@ -34,19 +47,16 @@ export function listThoughts(): Array<ThoughtMeta & { body: string }> {
       const { meta, body } = parseFrontmatter(raw);
       return {
         slug,
-        title: meta.title ?? slug,
+        title: metaStr(meta.title) ?? slug,
         // Six early essays carried their one-liner under `subtitle:` — the
         // renderer ignored it and they listed as bare titles. Honor it.
-        summary: meta.summary ?? meta.subtitle ?? "",
-        excerpt: meta.excerpt ?? meta.subtitle ?? "",
-        publishedAt: meta.publishedAt ?? "",
-        tags: (meta.tags ?? "")
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean),
-        featured: (meta.featured ?? "false") === "true",
-        author: meta.author ?? "Loki",
-        readingTimeMin: Number(meta.readingTimeMin ?? "6"),
+        summary: metaStr(meta.summary) ?? metaStr(meta.subtitle) ?? "",
+        excerpt: metaStr(meta.excerpt) ?? metaStr(meta.subtitle) ?? "",
+        publishedAt: metaStr(meta.publishedAt) ?? "",
+        tags: metaTags(meta.tags),
+        featured: (metaStr(meta.featured) ?? "false") === "true",
+        author: metaStr(meta.author) ?? "Loki",
+        readingTimeMin: Number(metaStr(meta.readingTimeMin) ?? "6"),
         body,
       };
     })

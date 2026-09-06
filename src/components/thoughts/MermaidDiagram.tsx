@@ -63,7 +63,18 @@ function subscribeSystemDark(onChange: () => void): () => void {
 const getSystemDark = () => window.matchMedia("(prefers-color-scheme: dark)").matches;
 const getServerSystemDark = () => true;
 
-export function MermaidDiagram({ chart }: { chart: string }) {
+// Prop shape matches bip-kit's ArticleBody mermaid override
+// (ComponentType<{ code: string }>), so this island plugs straight into
+// `components={{ mermaid: MermaidDiagram }}`. We keep this local island
+// instead of bip-kit/react/mermaid's MermaidBlock for two load-bearing
+// reasons:
+//   1. FleetCrown themes via next-themes (class attribute, dark-first
+//      default); MermaidBlock only watches `data-theme` + the OS preference.
+//   2. FleetCrown's tokens are authored in oklch. MermaidBlock passes the
+//      computed value straight to mermaid, whose color parser rejects
+//      oklch()/lab() — the exact initialize() throw documented above that
+//      once blanked every diagram. The canvas normalization here is the fix.
+export function MermaidDiagram({ code: chart }: { code: string }) {
   const id = useId().replace(/:/g, "");
   const ref = useRef<HTMLDivElement>(null);
   const { resolvedTheme, theme } = useTheme();

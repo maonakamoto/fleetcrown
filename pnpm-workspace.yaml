@@ -32,4 +32,5 @@ overrides:
 minimumReleaseAgeExclude:
   - "@bitbaum/ai-kit@0.6.2"
   - "@bitbaum/mail-kit"
+  - "bip-kit"
   - "limitkit"
