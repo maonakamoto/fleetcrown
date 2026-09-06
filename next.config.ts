@@ -42,7 +42,13 @@ const nextConfig: NextConfig = {
   // bundled by Turbopack/webpack, and only runs in the Node runtime. It backs
   // the LocalPtyExecutor (FleetCrown-owned agent PTYs). See
   // docs/architecture/agent-execution-platform.md.
-  serverExternalPackages: ["node-pty"],
+  // shiki must ALSO stay external: bip-kit loads it as an optional peer via a
+  // bundler-hidden dynamic import (`new Function("s","return import(s)")`), so
+  // a bundled copy is unreachable — the runtime import resolves from
+  // node_modules or not at all. External + the static import in
+  // ThoughtArticleBody makes nft trace the real package (correct pnpm layout)
+  // into the standalone node_modules, exactly how node-pty ships.
+  serverExternalPackages: ["node-pty", "shiki"],
   env: {
     NEXT_PUBLIC_APP_VERSION: PKG_VERSION,
     NEXT_PUBLIC_BUILD_SHA: buildSha(),
@@ -107,19 +113,6 @@ const nextConfig: NextConfig = {
     // /api/agent/daemon's bash + python bundle entries are gone — Session 4 of
     // killing-the-bash-daemon (2026-06-11) deleted the source files and the
     // route now returns 410 Gone pointing at /download for Fleet Runner.
-    //
-    // bip-kit loads its optional shiki peer through a bundler-hidden dynamic
-    // import (`new Function("s", "return import(s)")`), so the standalone
-    // tracer never sees it — without these globs, prod would silently render
-    // essays' code blocks in the un-highlighted mono fallback while dev shows
-    // them highlighted. Both the top-level symlink and the pnpm store paths
-    // are listed because glob-following through pnpm's symlink layout is not
-    // guaranteed.
-    "/thoughts/[slug]": [
-      "./node_modules/shiki/**",
-      "./node_modules/.pnpm/shiki@*/**",
-      "./node_modules/.pnpm/@shikijs+*/**",
-    ],
   },
 };
 
