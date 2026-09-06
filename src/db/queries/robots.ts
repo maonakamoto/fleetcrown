@@ -271,6 +271,3 @@ export async function deleteRobot(userId: string, id: string) {
     .returning({ id: entities.id });
   return deleted ?? null;
 }
-
-/** Used by tests and any caller that must prove people queries stay isolated. */
-export const ROBOT_ENTITY_TYPE = ENTITY_TYPE.ROBOT;

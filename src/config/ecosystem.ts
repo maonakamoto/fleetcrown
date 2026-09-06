@@ -53,12 +53,6 @@ export const ECOSYSTEM = {
   },
 } as const;
 
-/** Public page for any OrangeCat project id — one definition, so surfaces that
- *  link to a published project cannot disagree about the URL shape. */
-export function orangeCatProjectUrl(projectId: string): string {
-  return orangeCatPage(`/projects/${projectId}`);
-}
-
 export const ECOSYSTEM_LINKS = {
   mao: ECOSYSTEM.orangeCat.profileUrl,
   orangeCat: orangeCatPage(`/projects/${ECOSYSTEM.orangeCat.projectId}`),
@@ -86,31 +80,3 @@ export const ORANGECAT_INTEGRATION = {
   relation: "FleetCrown is a customer of OrangeCat through the shared entity graph.",
   note: "OrangeCat is the public funding layer; FleetCrown is the building layer.",
 } as const;
-
-/**
- * The three-pillar stack FleetCrown belongs to. Solon is the governance
- * pillar: FleetCrown's agent Loki is a registered voting member there,
- * casting Bitcoin-signed votes from this box (scripts/solon/cast-vote.ts,
- * key never leaves LOKI_SOLON_PRIVKEY's environment), and Solon decision
- * webhooks land at /api/solon/events.
- */
-export const ECOSYSTEM_PILLARS = [
-  {
-    key: "orangecat",
-    title: ECOSYSTEM.orangeCat.title,
-    role: "Economy",
-    siteUrl: ECOSYSTEM.orangeCat.siteUrl,
-  },
-  {
-    key: "fleetcrown",
-    title: ECOSYSTEM.fleetCrown.title,
-    role: "Engineering",
-    siteUrl: ECOSYSTEM.fleetCrown.siteUrl,
-  },
-  {
-    key: "solon",
-    title: ECOSYSTEM.solon.title,
-    role: "Governance",
-    siteUrl: ECOSYSTEM.solon.siteUrl,
-  },
-] as const;

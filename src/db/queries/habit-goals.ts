@@ -38,15 +38,6 @@ export async function getGoalsForHabit(userId: string, habitId: string): Promise
   return rows;
 }
 
-export async function getHabitsForGoal(userId: string, goalId: string): Promise<LinkedHabit[]> {
-  const rows = await db
-    .select({ id: habits.id, title: habits.title })
-    .from(habitGoals)
-    .innerJoin(habits, eq(habitGoals.habitId, habits.id))
-    .where(and(eq(habitGoals.userId, userId), eq(habitGoals.goalId, goalId)));
-  return rows;
-}
-
 /** Returns a map of goalId → linked habits, for the given goal IDs. */
 export async function getHabitsByGoalIds(
   userId: string,

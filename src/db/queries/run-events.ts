@@ -50,12 +50,3 @@ export async function emitRunEvent(
       console.error("[run-events] emit failed:", kind, runId, err);
     });
 }
-
-/** Full ledger for one run, oldest first — the run's biography. */
-export async function getRunEvents(runId: string) {
-  return db
-    .select()
-    .from(runEvents)
-    .where(eq(runEvents.runId, runId))
-    .orderBy(asc(runEvents.createdAt));
-}

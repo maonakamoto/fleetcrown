@@ -125,10 +125,6 @@ export function isHumanTaskStatus(value: string): value is HumanTaskStatus {
   return Object.values(HUMAN_TASK_STATUS).includes(value as HumanTaskStatus);
 }
 
-export function isOpenHumanTask(status: HumanTaskStatus): boolean {
-  return OPEN_HUMAN_TASK_STATUSES.includes(status);
-}
-
 /** Waiting on the other person, not on you. Drives the "asked, no answer" count. */
 export function isWaitingOnAssignee(status: HumanTaskStatus): boolean {
   return status === HUMAN_TASK_STATUS.ASSIGNED || status === HUMAN_TASK_STATUS.ACCEPTED;
@@ -263,10 +259,6 @@ export type TaskCurrency = (typeof TASK_CURRENCIES)[number];
 
 export const BTC = "BTC" satisfies TaskCurrency;
 export const SATS_PER_BTC = 100_000_000;
-
-export function isTaskCurrency(value: string): value is TaskCurrency {
-  return (TASK_CURRENCIES as readonly string[]).includes(value);
-}
 
 /** Fee ceiling. Not a business rule — a typo guard at the API boundary. */
 export const MAX_TASK_FEE = 1_000_000;

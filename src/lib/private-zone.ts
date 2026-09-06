@@ -66,11 +66,6 @@ export async function isPrivateZoneLocked(userId: string): Promise<boolean> {
   return !(await isPrivateZoneUnlocked(userId));
 }
 
-/** Server components: throws redirect is handled by returning false — caller decides. */
-export async function requirePrivateZoneUnlocked(userId: string): Promise<boolean> {
-  return isPrivateZoneUnlocked(userId);
-}
-
 /**
  * API routes for people / money / habits / events.
  * Returns a 403 NextResponse when PIN is required but missing/invalid.

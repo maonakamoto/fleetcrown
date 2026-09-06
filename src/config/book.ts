@@ -11,13 +11,7 @@
  * Their public identity on a network is not a GTM lead.
  */
 
-import { ACTION_TYPE, ENTITY_TYPE, type ActionType } from "@/lib/constants/statuses";
-
-export const BOOK_ACTION_TYPE = {
-  IMPORT_PERSON: "import_person",
-  ENRICH_PERSON: "enrich_person",
-  MERGE_PEOPLE: "merge_people",
-} as const;
+import { ACTION_TYPE, type ActionType } from "@/lib/constants/statuses";
 
 export const BOOK_ACTION_TYPES = [
   ACTION_TYPE.IMPORT_PERSON,
@@ -116,6 +110,3 @@ export const PUBLIC_MAIL_DOMAINS = new Set([
   "web.de",
   "aol.com",
 ]);
-
-/** People entities only — robots never enter the book-building queue. */
-export const BOOK_ENTITY_TYPE = ENTITY_TYPE.PERSON;

@@ -1169,8 +1169,6 @@ Next loop iteration: next_best Setup detects the file, Rule 0 surfaces it, and o
   },
 ];
 
-export const ALL_CATEGORIES = Object.keys(CATEGORY_META) as PromptCategory[];
-
 // ── Category groups ──────────────────────────────────────────────────────────
 // The library has 14 fine-grained categories — too many to scan as a filter bar.
 // Collapse them into a handful of top-level GROUPS for the /prompts filter, while
@@ -1208,12 +1206,6 @@ export const CATEGORY_TO_GROUP: Record<PromptCategory, PromptGroup> = {
 };
 
 export const groupForCategory = (c: PromptCategory): PromptGroup => CATEGORY_TO_GROUP[c];
-
-export const GLOBAL_PROMPTS = PROMPT_TEMPLATES.filter((t) => t.scope === "global");
-
-export const QUICK_PROMPTS = PROMPT_TEMPLATES.filter(
-  (t) => t.featured && t.scope === "global",
-).concat(PROMPT_TEMPLATES.filter((t) => t.featured && t.scope === "project").slice(0, 4));
 
 /** Featured prompts scoped to a specific project — shown in the control panel for one-click inject. */
 export const FEATURED_PROJECT_PROMPTS = PROMPT_TEMPLATES.filter(

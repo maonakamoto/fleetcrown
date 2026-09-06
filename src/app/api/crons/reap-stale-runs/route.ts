@@ -14,6 +14,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import { requireCronAuth } from "@/lib/cron-auth";
 import { logDebug } from "@/db/queries/debug-logs";
 import { cleanupStaleOrchestrationRuns } from "@/db/queries/orchestration-runs";
+import { closeStaleAgentTurns } from "@/db/queries/agent-sessions";
 import { emitRunEvent } from "@/db/queries/run-events";
 import { closeOpenRunsFromPushedState } from "@/lib/orchestration/close-sweep";
 
@@ -62,10 +63,22 @@ export async function GET(req: NextRequest) {
       meta: { runs: reaped },
     });
   }
+  // Agent turns are the same class of lie one table over: closeStaleAgentTurns
+  // has always existed, and nothing ever called it, so its own docblock's
+  // promise — that agent_sessions "does not accumulate rows that look open
+  // forever to anything querying it directly, including a human with psql" —
+  // was provided by nobody. The live read bounds on startedAt and is fine; this
+  // is for every other reader. Same janitor, same hour, same reason.
+  const turnsClosed = await closeStaleAgentTurns().catch((e) => {
+    console.error("[reap-stale-runs] agent-turn housekeeping failed:", e);
+    return 0;
+  });
+
   return NextResponse.json({
     ok: true,
     closed: swept.closed.length,
     reaped: reaped.length,
     partial,
+    turnsClosed,
   });
 }

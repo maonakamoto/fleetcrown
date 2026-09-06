@@ -173,18 +173,6 @@ export function parseProjectsConf(): { tab: string; dir: string }[] {
 }
 
 /**
- * Parse claude-projects.conf → Map<lowerCaseTabName, canonicalTabName>.
- * Used by the inject route to resolve a tab name to its exact-cased form.
- */
-export function readProjectsMap(): Map<string, string> {
-  const map = new Map<string, string>();
-  for (const { tab } of parseProjectsConf()) {
-    map.set(tab.toLowerCase(), tab);
-  }
-  return map;
-}
-
-/**
  * Given a canonical tab name and the currently active Zellij tab names,
  * return the live tab name to use for injection and /tmp sentinel files.
  *

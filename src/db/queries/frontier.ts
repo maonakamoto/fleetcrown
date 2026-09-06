@@ -43,12 +43,6 @@ export async function getLatestFrontierDigest(): Promise<FrontierDigestRow | nul
   return row ?? null;
 }
 
-/** Recent digests for an archive strip (date + headline only is enough, but we
- *  return full rows for simplicity; the list is short). */
-export async function listRecentFrontierDigests(limit = 14): Promise<FrontierDigestRow[]> {
-  return db.select().from(frontierDigests).orderBy(desc(frontierDigests.digestDate)).limit(limit);
-}
-
 // ─── Self-improvement proposals ──────────────────────────────────────────────
 
 /** Who/what the self-improvement loop drafts proposals for: the owner of the

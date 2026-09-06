@@ -92,15 +92,6 @@ export async function getAtlasRows(userId: string): Promise<AtlasRow[]> {
   }));
 }
 
-/** Projects that have a site to probe. */
-export async function getProbeTargets(userId: string): Promise<{ id: string; liveUrl: string }[]> {
-  const rows = await db
-    .select({ id: userProjects.id, liveUrl: userProjects.liveUrl })
-    .from(userProjects)
-    .where(and(eq(userProjects.userId, userId), eq(userProjects.isActive, true)));
-  return rows.flatMap((r) => (r.liveUrl ? [{ id: r.id, liveUrl: r.liveUrl }] : []));
-}
-
 export async function saveSiteSnapshot(
   userId: string,
   projectId: string,
