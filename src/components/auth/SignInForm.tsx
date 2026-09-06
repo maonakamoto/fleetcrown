@@ -45,7 +45,7 @@ function FormInner({
   const urlError = searchParams.get("error");
   const urlErrorMsg =
     urlError === "OAuthAccountNotLinked"
-      ? "This email is already registered with a different sign-in method."
+      ? "This email is already registered with a different sign-in method. Sign in with that method first, then connect OrangeCat under Settings → Account."
       : urlError === "AccessDenied"
         ? "Access was denied. Please try again."
         : urlError
