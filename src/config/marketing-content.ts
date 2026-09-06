@@ -1,24 +1,7 @@
-import {
-  APP_NAME,
-  APP_DOMAIN,
-  MARKETING_TAGLINE,
-  MARKETING_SUBTITLE,
-  MARKETING_POSITIONING,
-} from "./brand";
+import { APP_DOMAIN } from "./brand";
 
 // Central source of truth for all public marketing copy.
 // Rebrand, reposition, or A/B test by editing this file — no component changes.
-
-export const SITE_TITLE = `${APP_NAME} — Local AI Agent Fleet Control`;
-export const SITE_DESCRIPTION =
-  "The operating system for people running real AI agents. Local execution where the work happens. Remote command from anywhere.";
-
-// Homepage hero
-export const HOME_HERO = {
-  badge: MARKETING_POSITIONING,
-  headline: [MARKETING_TAGLINE, ""],
-  subheadline: MARKETING_SUBTITLE,
-};
 
 // Hero product visual — static chrome only. The actual fleet snapshot (projects,
 // status, metrics) is fetched LIVE from the owner's real fleet in page.tsx via
@@ -27,27 +10,6 @@ export const HOME_HERO = {
 export const HOME_HERO_CONSOLE = {
   label: "Fleet Command",
 } as const;
-
-// Differentiation
-export const DIFFERENTIATION = {
-  title: "Not another coding agent.",
-  subtitle:
-    "Most tools help you write code faster in one file or one project. We help serious builders orchestrate real agent operations at fleet scale.",
-  points: [
-    {
-      title: "Local execution is the foundation",
-      body: "Your agents run on your machines with full access to your environment. We do not force everything through remote sandboxes.",
-    },
-    {
-      title: "Fleet orchestration, not single-agent assistance",
-      body: "Built for people already running many agents across many projects. Explicit per-project autonomy levels instead of one generic assistant.",
-    },
-    {
-      title: "Local runner + web command center",
-      body: "The desktop application executes. The web portal gives you fleet visibility and remote control. Two surfaces, one system.",
-    },
-  ],
-};
 
 // Mission — one striking statement, minimal elaboration
 export const MISSION = {

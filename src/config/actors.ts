@@ -165,10 +165,6 @@ export function isRobotClass(value: string): value is RobotClass {
   return (ROBOT_CLASSES as readonly string[]).includes(value);
 }
 
-export function isMarketOffer(value: string): value is MarketOffer {
-  return (MARKET_OFFERS as readonly string[]).includes(value);
-}
-
 type ActorDef = {
   kind: ActorKind;
   entityType: typeof ENTITY_TYPE.PERSON | typeof ENTITY_TYPE.ROBOT;

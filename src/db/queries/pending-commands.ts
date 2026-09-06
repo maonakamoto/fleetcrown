@@ -497,15 +497,6 @@ export async function recentSwitchAgentStats(
   return { windowCount: Number(r?.windowCount ?? 0), pending: Number(r?.pending ?? 0) };
 }
 
-// Poll endpoint: returns pending (unclaimed) commands for a given user.
-export async function getPendingCommandsForUser(userId: string) {
-  return db
-    .select()
-    .from(pendingCommands)
-    .where(and(eq(pendingCommands.userId, userId), isNull(pendingCommands.claimedAt)))
-    .orderBy(pendingCommands.createdAt);
-}
-
 // Returns commands the user should know about: executed-and-failed (ok=false)
 // PLUS executed-but-unverified inject commands (ok=true, verified=false — the
 // keystrokes landed but the agent didn't react within the post-flight window).

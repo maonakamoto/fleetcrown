@@ -380,7 +380,3 @@ export const FLEET_SURFACES = [
 ] as const;
 
 export const MOBILE_NAV_ITEMS = NAV_ITEMS.filter((item) => item.mobile);
-
-// Kept as a named export for any legacy import — same five marketing items
-// that already live in the "site" section above.
-export const SITE_NAV_ITEMS: NavItem[] = SIDEBAR_SECTIONS.find((s) => s.id === "site")!.items;

@@ -8,7 +8,6 @@ import { z } from "zod";
  * feature. Prose sentences use the lowercase noun "scheduled job(s)".
  */
 export const SCHEDULED_JOBS_LABEL = "Scheduled Jobs";
-export const SCHEDULED_JOB_LABEL = "Scheduled Job";
 
 export const CreateCronBody = z.object({
   name: z.string().trim().min(1, "name is required"),

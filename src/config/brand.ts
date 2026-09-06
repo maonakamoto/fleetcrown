@@ -45,7 +45,6 @@ export const APP_DESCRIPTION =
 export const APP_URL = `https://${APP_DOMAIN}`;
 // Dev fallback when NEXTAUTH_URL is unset (local dev server).
 export const LOCAL_DEV_URL = "http://localhost:3000";
-export const APP_PROFILE_URL = (username: string) => `${APP_DOMAIN}/u/${username}`;
 
 // Bridge — the Hetzner SSE fan-out service that delivers fc:state events to
 // every connected browser, desktop, and phone. Hosted on the shared bitbaum
@@ -71,8 +70,6 @@ export const APP_TAGLINE = "run your agent fleet";
 
 // Marketing / Positioning (SSOT for public copy)
 export const MARKETING_TAGLINE = "The operating system for people running real AI agents.";
-export const MARKETING_SUBTITLE =
-  "Local execution where the work happens. Remote command from anywhere. One system. Two surfaces.";
 export const MARKETING_HERO_PRIMARY = "Run your fleet.";
 export const MARKETING_HERO_SECONDARY = "From anywhere.";
 export const MARKETING_POSITIONING = "Local execution · Remote command · No compromises";
@@ -80,13 +77,3 @@ export const MARKETING_POSITIONING = "Local execution · Remote command · No co
  *  of tracked uppercase and wrapped to two lines inside a pill on every phone,
  *  where a badge that wraps stops reading as a badge. Same claim, two terms. */
 export const MARKETING_POSITIONING_SHORT = "Local execution · Remote command";
-
-// Easy rebrand surface — use this in marketing instead of hardcoding "FleetCrown".
-export const PRODUCT_NAME = APP_NAME;
-
-// Visual mark contract (for docs, audits, and future shared SVG data).
-// The primary mark is the "control window" (rounded rect + vertical + horiz bars).
-// See BrandMark.tsx for the canonical JSX version. icon.svg and opengraph images
-// duplicate the geometry (with scaling) and must be kept identical.
-export const BRAND_MARK_DESCRIPTION =
-  "Control window (rounded rect frame with internal command bars) — the geometric mark for FleetCrown as command / control plane.";

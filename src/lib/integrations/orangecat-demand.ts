@@ -15,9 +15,6 @@ import { OC_BASE } from "./orangecat";
 const TTL_MS = 10 * 60 * 1000;
 /** Below this length a query is too vague to search the economy usefully. */
 const MIN_QUERY_LEN = 8;
-/** Only inject economy matches at least this semantically close — keeps
- *  unrelated Loki turns clean (keyword-fallback hits have no similarity). */
-const MIN_ECONOMY_SIMILARITY = 0.4;
 
 export interface DemandNeed {
   id: string;
@@ -84,49 +81,4 @@ export async function searchEconomy(query: string): Promise<EconomyMatch[]> {
     `/api/v1/search?q=${encodeURIComponent(q.slice(0, 200))}`,
   );
   return Array.isArray(data?.results) ? data.results : [];
-}
-
-/** Format strong (semantic-only) economy matches as a Loki block ("" if none).
- *  Keyword-fallback hits (no similarity) are dropped so unrelated turns stay
- *  clean — the block appears only when the operator's message truly matches. */
-export function buildEconomySearchBlock(matches: EconomyMatch[]): string {
-  const strong = (matches ?? [])
-    .filter((m) => typeof m.similarity === "number" && m.similarity >= MIN_ECONOMY_SIMILARITY)
-    .slice(0, 6);
-  if (strong.length === 0) {
-    return "";
-  }
-  const lines = strong.map(
-    (m) =>
-      `- [${m.type}] ${m.title}: ${(m.description || "").replace(/\s+/g, " ").slice(0, 140)} (${m.url})`,
-  );
-  return [
-    "### Relevant on OrangeCat right now (semantic matches to the operator's message — needs, offerings, projects, or people they could act on or build for)",
-    ...lines,
-  ].join("\n");
-}
-
-/** Format the demand feed as a compact Loki context block ("" if empty). */
-export function buildDemandBlock(d: OpenDemand | null): string {
-  if (!d) {
-    return "";
-  }
-  const needLines = (d.needs ?? [])
-    .slice(0, 8)
-    .map((n) => `- [need] ${n.title}: ${n.text.replace(/\s+/g, " ").slice(0, 160)} (${n.url})`);
-  const terms = (d.searches ?? [])
-    .slice(0, 8)
-    .map((s) => s.term)
-    .filter(Boolean);
-  if (needLines.length === 0 && terms.length === 0) {
-    return "";
-  }
-  const parts = [
-    "### Live demand on OrangeCat (open needs you could build for and list back — real demand, not guesses; if the operator asks what to build, ground your suggestions here)",
-    ...needLines,
-  ];
-  if (terms.length > 0) {
-    parts.push(`People are also searching for: ${terms.join(", ")}.`);
-  }
-  return parts.join("\n");
 }

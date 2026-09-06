@@ -5,7 +5,7 @@
  */
 import { APP_NAME } from "@/config/brand";
 import { PALETTE } from "@/lib/palette";
-import { DIGEST_CADENCES, type DigestCadence } from "@/db/schema/notification-preferences";
+import { type DigestCadence } from "@/db/schema/notification-preferences";
 
 export const MAIL_KINDS = [
   "verify",
@@ -43,8 +43,6 @@ export const DIGEST_CADENCE_COPY: Record<
     windowLabel: "the last 30 days",
   },
 };
-
-export const DIGEST_CADENCE_VALUES = DIGEST_CADENCES;
 
 /** Email HTML cannot read CSS vars. These map 1:1 to globals.css tokens. */
 export const EMAIL_THEME = {

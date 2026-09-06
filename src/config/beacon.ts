@@ -1,9 +1,4 @@
-import { join } from "path";
-import { homedir } from "os";
 import { APP_NAME } from "./brand";
-
-/** Legacy settings file path — kept for runner fallback reads only. */
-export const BEACON_SETTINGS_PATH = join(homedir(), ".config", "agent-dashboard-settings.json");
 
 export const WHISPER_MODEL_VALUES = ["tiny", "base", "small", "medium", "large"] as const;
 type WhisperModel = (typeof WHISPER_MODEL_VALUES)[number];

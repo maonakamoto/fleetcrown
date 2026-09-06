@@ -158,11 +158,3 @@ export const PUBLIC_NAV: PublicNavEntry[] = [
     description: "The governance pillar of the stack — Bitcoin-signed proposals and votes.",
   },
 ];
-
-// Flat list — kept for backwards compatibility (sitemap-like uses, mobile
-// fallbacks). Derived from PUBLIC_NAV so the two never drift.
-export const PUBLIC_NAV_LINKS: NavLink[] = PUBLIC_NAV.flatMap((entry) =>
-  entry.kind === "menu"
-    ? entry.sections.flatMap((section) => section.items.map(({ label, href }) => ({ label, href })))
-    : [{ label: entry.label, href: entry.href }],
-);

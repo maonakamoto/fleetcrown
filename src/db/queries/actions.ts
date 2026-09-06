@@ -338,25 +338,6 @@ export async function rejectAction(id: string, userId: string) {
     .returning();
 }
 
-export async function getActionStats(userId: string) {
-  const [result] = await db
-    .select({
-      drafts: sql<number>`count(*) filter (where ${actions.status} = ${ACTION_STATUS.DRAFT})`,
-      approved: sql<number>`count(*) filter (where ${actions.status} = ${ACTION_STATUS.APPROVED})`,
-      executed: sql<number>`count(*) filter (where ${actions.status} = ${ACTION_STATUS.EXECUTED})`,
-      rejected: sql<number>`count(*) filter (where ${actions.status} = ${ACTION_STATUS.REJECTED})`,
-    })
-    .from(actions)
-    .where(eq(actions.userId, userId));
-
-  return {
-    drafts: Number(result.drafts),
-    approved: Number(result.approved),
-    executed: Number(result.executed),
-    rejected: Number(result.rejected),
-  };
-}
-
 // ── Proactive check-in producer support (see lib/actions/checkin-producer.ts) ──
 
 /**

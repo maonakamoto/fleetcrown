@@ -82,8 +82,3 @@ export function renderTextAttachments(attachments: Attachment[] | undefined): st
   if (text.length === 0) return "";
   return text.map((a) => `\n\n--- Attached file: ${a.name} ---\n${a.content}`).join("");
 }
-
-/** @deprecated use renderTextAttachments — kept for any stale imports during migration */
-export function renderAttachments(attachments: Attachment[] | undefined): string {
-  return renderTextAttachments(attachments);
-}

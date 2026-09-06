@@ -12,17 +12,6 @@ function legacyDaemonTokenEnabled(): boolean {
   return Boolean(envAlias("DAEMON_TOKEN")) && envAliasBool("ALLOW_LEGACY_DAEMON_TOKEN");
 }
 
-/**
- * Returns true if the request carries a valid daemon token bearer credential.
- * @deprecated Use ck_* agent tokens. This path only resolves when
- * APP_ALLOW_LEGACY_DAEMON_TOKEN=1 (or COCKPIT_ALLOW_LEGACY_DAEMON_TOKEN=1) is
- * set — it always maps to the "default" user and is not multi-tenant safe.
- */
-export function isRunnerRequest(req: NextRequest): boolean {
-  if (!legacyDaemonTokenEnabled()) return false;
-  return extractBearer(req) === envAlias("DAEMON_TOKEN");
-}
-
 /** Looks up the default user's ID for daemon-authenticated requests. */
 export async function getRunnerUserId(): Promise<string | null> {
   const user = await getDefaultUser();

@@ -29,13 +29,3 @@ export function verifySolonWebhookSignature(
   const b = Buffer.from(expected, "hex");
   return a.length === b.length && timingSafeEqual(a, b);
 }
-
-/**
- * RESERVED dispatch action type: a future FleetCrown flow where an agent
- * drafts a Solon governance proposal, an operator approves it in the approval
- * queue (the iron rule — no auto-approve — stays intact), and the approved
- * draft is filed on Solon signed with LOKI_SOLON_PRIVKEY. Reserved as a
- * constant now so the name is stable when the flow lands; nothing dispatches
- * it in v1.
- */
-export const RESERVED_ACTION_PROPOSE_SOLON_CHANGE = "propose_solon_change" as const;
